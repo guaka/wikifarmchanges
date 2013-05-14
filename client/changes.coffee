@@ -1,8 +1,5 @@
 
 
-apiCall = '/api.php?format=json&action=query&list=recentchanges&rcprop=user|title|ids|comment|sizes|timestamp|loginfo'
-
-
 # global for debugging
 @changes = []
 changesObj = {}
@@ -15,22 +12,21 @@ changesObj = {}
     apiPath = wiki.apiPath
     name = wiki.name
 
+  $.getJSON('http://' + name + apiPath + '/api.php?callback=?',
+    format: "json"
+    action: "query"
+    list: 'recentchanges'
+    rcprop: 'user|title|ids|comment|sizes|timestamp|loginfo'
+    ).done (data) ->
+      rc = data.query.recentchanges
 
-  Meteor.http.get 'http://' + name + apiPath + apiCall, (error, result) ->
-    console.log error if error
-    json = JSON.parse result.content
-    rc = json.query.recentchanges
+      changesObj[name] = _.map rc, (x) ->
+        x.link = 'http://' + name + '/en/' + x.title
+        x.timestamp = moment(x.timestamp).fromNow()
+        x.comment = if x.logtype is 'delete' then '' else x.comment[..30]
+        x
 
-    changesObj[name] = _.map rc, (x) ->
-      x.link = 'http://' + name + '/en/' + x.title
-      x.timestamp = moment(x.timestamp).fromNow()
-      if x.logtype is 'delete'
-        x.comment = ''
-      else
-        x.comment = x.comment[..30]
-      x
-
-    Session.set 'changed', Meteor.uuid()
+      Session.set 'changed', Meteor.uuid()
 
 
 @updateChanges = ->
@@ -41,8 +37,18 @@ changesObj = {}
 
 Meteor.startup ->
   updateChanges()
+  randomInterval()
 
-Meteor.setInterval updateChanges, 90 * 1000 #ms
+
+# http://stackoverflow.com/questions/6962658/randomize-setinterval-how-to-rewrite-same-random-after-random-interval
+randomInterval = ->
+  rand = 1000 * (Math.round(Math.random() * 60) + 60)
+  setTimeout (->
+    updateChanges()
+    randomInterval()
+  ), rand
+
+
 
 Template.changes.updated = ->
   Session.get 'updated'
