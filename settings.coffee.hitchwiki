@@ -1,0 +1,19 @@
+
+@wikis = [
+  { name: 'hitchwiki.org', apiPath: '/en' }
+  { name: 'hitchwiki.org', apiPath: '/de' }
+  { name: 'hitchwiki.org', apiPath: '/es' }
+  { name: 'hitchwiki.org', apiPath: '/fr' }
+  { name: 'hitchwiki.org', apiPath: '/ru' }
+  { name: 'hitchwiki.org', apiPath: '/tr' }
+  { name: 'hitchwiki.org', apiPath: '/pl' }
+  { name: 'hitchwiki.org', apiPath: '/fi' }
+  { name: 'hitchwiki.org', apiPath: '/zh' }
+  { name: 'hitchwiki.org', apiPath: '/pt' }
+  { name: 'hitchwiki.org', apiPath: '/he' }
+  { name: 'hitchwiki.org', apiPath: '/bg' }
+  { name: 'hitchwiki.org', apiPath: '/nl' }
+  { name: 'hitchwiki.org', apiPath: '/ro' }
+  { name: 'hitchwiki.org', apiPath: '/hr' }
+  { name: 'hitchwiki.org', apiPath: '/lt' }
+]

@@ -7,12 +7,12 @@ changesObj = {}
 @fetchChanges = (wiki) ->
   apiPath = '/w'
   if typeof wiki is 'string'
-    name = wiki
+    host = wiki
   else
     apiPath = wiki.apiPath
-    name = wiki.name
+    host = wiki.name
 
-  $.getJSON('http://' + name + apiPath + '/api.php?callback=?',
+  $.getJSON('http://' + host + apiPath + '/api.php?callback=?',
     format: "json"
     action: "query"
     list: 'recentchanges'
@@ -20,8 +20,8 @@ changesObj = {}
     ).done (data) ->
       rc = data.query.recentchanges
 
-      changesObj[name] = _.map rc, (x) ->
-        x.link = 'http://' + name + '/en/' + x.title
+      changesObj[host + apiPath] = _.map rc, (x) ->
+        x.link = 'http://' + host + '/en/' + x.title
         x.timestamp = moment(x.timestamp).fromNow()
         x.comment = if x.logtype is 'delete' then '' else x.comment[..30]
         x
