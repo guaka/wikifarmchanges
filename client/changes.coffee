@@ -5,7 +5,7 @@
 changesObj = {}
 
 articlePath = (apiPath) ->
-  if apiPath is '/w' then 'en' else apiPath
+  if apiPath is '/w' then '/en' else apiPath
 
 @fetchChanges = (wiki) ->
   apiPath = '/w'
@@ -23,8 +23,9 @@ articlePath = (apiPath) ->
     ).done (data) ->
       rc = data.query.recentchanges
 
-      changesObj[host + apiPath] = _.map rc, (x) ->
-        x.link = 'http://' + host + articlePath(apiPath) + '/' + x.title
+      artPath = articlePath(apiPath)
+      changesObj[host + artPath] = _.map rc, (x) ->
+        x.link = 'http://' + host + artPath + '/' + x.title
         x.timestamp = moment(x.timestamp).fromNow()
         x.comment = if x.logtype is 'delete' then '' else x.comment[..30]
         x
