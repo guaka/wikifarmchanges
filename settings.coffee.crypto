@@ -7,9 +7,10 @@
   { name: 'wiki.invictus.io' }
   { name: 'wiki.mastercoin.org', apiPath: '/', articlePath: 'index.php' }
   { name: 'wiki.ethereum.org', apiPath: '/', articlePath: 'index.php' }
-  { name: 'thenxtwiki.org'}
+  { name: 'www.thenxtwiki.org', articlePath: 'wiki'}
   { name: 'litecoin.info', apiPath: '/', articlePath: '' }
   { name: 'ripple.com', apiPath: 'wiki/', articlePath: 'wiki' }
 ]
 
 
+# http://coinwiki.info/en/Cryptocurrency_wikis
