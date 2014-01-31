@@ -12,5 +12,5 @@
   'velo.wiki.yt'
   'visawiki.org'
   'wiki.yt'
-  { name: 'hitchwiki.org', apiPath: '/en' }
+  { name: 'hitchwiki.org', apiPath: 'en' }
 ]

@@ -7,6 +7,9 @@ changesObj = {}
 
 
 @fetchChanges = (wiki) ->
+  if typeof wiki is 'string'
+    wiki = { name: wiki }
+
   wiki.apiPath = 'w/' unless wiki.apiPath?
   wiki.articlePath = 'en' unless wiki.articlePath?
   host = wiki.name + '/'
@@ -63,7 +66,7 @@ randomInterval = ->
 
 
 Template.changes.title = ->
-  siteTitle
+  if siteTitle? then siteTitle else 'Wikifarmchanges'
 
 Template.changes.updated = ->
   Session.get 'updated'
