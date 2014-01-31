@@ -2,7 +2,7 @@
   <div id="header">
     <div class="row">
       <div class="span4">
-        <h1>changes</h1>
+        <h1>{{title}}</h1>
       </div>
       <div class="span8">
         <div id="refresh" class="btn">refresh</div>
@@ -19,6 +19,7 @@
 <template name="wiki">
   <div class="wiki">
     <h2><a href="http://{{name}}/Special:Recentchanges">{{name}}</a></h2>
+    {{numArticles}}
     {{#each rc}}
     {{> change}}
     {{/each}}

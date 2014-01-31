@@ -1,15 +1,16 @@
 
 @wikis = [
-  'veganwiki.info'
-  'velo.wiki.yt'
-  'nomadwiki.org'
-  'wiki.yt'
-  'couchwiki.org'
   'cashwiki.org'
   'coinwiki.info'
-  'trashwiki.org'
-  'sharewiki.org'
+  'couchwiki.org'
   'cultwiki.org'
+  'deletionpedia.org'
+  'nomadwiki.org'
+  'sharewiki.org'
+  'trashwiki.org'
+  'veganwiki.info'
+  'velo.wiki.yt'
   'visawiki.org'
+  'wiki.yt'
   { name: 'hitchwiki.org', apiPath: '/en' }
 ]

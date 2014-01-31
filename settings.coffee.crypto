@@ -1,0 +1,15 @@
+
+@siteTitle = 'Cryptowikichanges'
+
+@wikis = [
+  { name: 'bitcoin.it', articlePath: 'wiki' }
+  { name: 'coinwiki.info' }
+  { name: 'wiki.invictus.io' }
+  { name: 'wiki.mastercoin.org', apiPath: '/', articlePath: 'index.php' }
+  { name: 'wiki.ethereum.org', apiPath: '/', articlePath: 'index.php' }
+  { name: 'thenxtwiki.org'}
+  { name: 'litecoin.info', apiPath: '/', articlePath: '' }
+  { name: 'ripple.com', apiPath: 'wiki/', articlePath: 'wiki' }
+]
+
+

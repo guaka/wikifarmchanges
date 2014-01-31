@@ -1,21 +1,30 @@
 
 
-# global for debugging
+# globals for debugging
 @changes = []
 changesObj = {}
+@statsObj = {}
 
-articlePath = (apiPath) ->
-  if apiPath is '/w' then '/en' else apiPath
 
 @fetchChanges = (wiki) ->
-  apiPath = '/w'
-  if typeof wiki is 'string'
-    host = wiki
-  else
-    apiPath = wiki.apiPath
-    host = wiki.name
+  wiki.apiPath = 'w/' unless wiki.apiPath?
+  wiki.articlePath = 'en' unless wiki.articlePath?
+  host = wiki.name + '/'
 
-  $.getJSON('http://' + host + apiPath + '/api.php?callback=?',
+  # Not so DRY but hey, it works!
+  $.getJSON('http://' + host + wiki.apiPath + '/api.php?callback=?',
+    format: "json"
+    action: "query"
+    meta: 'siteinfo'
+    siprop: 'statistics'
+    ).done (data) ->
+      stats = data.query.statistics
+
+      statsObj[host + wiki.articlePath] = stats
+
+      Session.set 'changed', Meteor.uuid()
+
+  $.getJSON('http://' + host + wiki.apiPath + '/api.php?callback=?',
     format: "json"
     action: "query"
     list: 'recentchanges'
@@ -23,9 +32,8 @@ articlePath = (apiPath) ->
     ).done (data) ->
       rc = data.query.recentchanges
 
-      artPath = articlePath(apiPath)
-      changesObj[host + artPath] = _.map rc, (x) ->
-        x.link = 'http://' + host + artPath + '/' + x.title
+      changesObj[host + wiki.articlePath] = _.map rc, (x) ->
+        x.link = 'http://' + host + wiki.articlePath + '/' + x.title
         x.timestamp = moment(x.timestamp).fromNow()
         x.comment = if x.logtype is 'delete' then '' else x.comment[..30]
         x
@@ -54,6 +62,9 @@ randomInterval = ->
 
 
 
+Template.changes.title = ->
+  siteTitle
+
 Template.changes.updated = ->
   Session.get 'updated'
 
@@ -62,7 +73,9 @@ Template.changes.changes = ->
   changes = _.map (_.pairs changesObj), (p) ->
     name: p[0]
     rc: p[1]
+    numArticles: statsObj?[p[0]]?.articles
   _.sortBy changes, (x) -> x.name
+
 
 
 Template.changes.events
