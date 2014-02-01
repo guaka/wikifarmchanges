@@ -1,4 +1,6 @@
 
+@sitTitle = 'Hitchwiki recent changes'
+
 @wikis = [
   { name: 'hitchwiki.org', apiPath: '/en' }
   { name: 'hitchwiki.org', apiPath: '/de' }
