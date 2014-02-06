@@ -4,7 +4,7 @@ many wikis.
 Some examples:
 * [wiki.yt changes](http://wikiytchanges.meteor.com/)
 * [hitchwiki changes](http://hitchwikichanges.meteor.com/)
-* [crypto wiki changes](http://cryptowikichanges.meteor.com/)
+* [crypto wiki changes](http://cryptowikichanges.meteor.com/) - requests for additional wikis  very welcome
 
 
 It's doing the HTTP GETs directly from the client through
