@@ -1,18 +1,21 @@
 
 
-# globals for debugging
 @changes = []
-changesObj = {}
+@changesObj = {}
 @statsObj = {}
 
 
 @fetchChanges = (wiki) ->
+  # Simplest: entity is name and everything is standard
   if typeof wiki is 'string'
     wiki = { name: wiki }
 
+  # Standard unless it's not
   wiki.apiPath = 'w/' unless wiki.apiPath?
   wiki.articlePath = 'en' unless wiki.articlePath?
-  host = wiki.name + '/'
+  host = if wiki.host? then wiki.host else wiki.name
+  host += '/'
+
 
   # Not so DRY but hey, it works!
   $.getJSON('http://' + host + wiki.apiPath + '/api.php?callback=?',
@@ -35,7 +38,7 @@ changesObj = {}
     ).done (data) ->
       rc = data.query.recentchanges
 
-      changesObj[host + wiki.articlePath] = _.map rc, (x) ->
+      changesObj[wiki.name] = _.map rc, (x) ->
         x.link = 'http://' + host + wiki.articlePath + '/' + x.title
         x.timestamp = moment(x.timestamp).fromNow()
         x.comment = if x.logtype is 'delete' then '' else x.comment[..30]
@@ -46,6 +49,7 @@ changesObj = {}
 
 @updateChanges = ->
   Session.set 'updated', moment().format("H:mm:ss")
+  console.log _.map wikis, (w) -> w.name
   for w in wikis
     fetchChanges w
 
@@ -65,19 +69,16 @@ randomInterval = ->
 
 
 
-Template.changes.title = ->
-  if siteTitle? then siteTitle else 'Wikifarmchanges'
-
-Template.changes.updated = ->
-  Session.get 'updated'
-
-Template.changes.changes = ->
-  Session.get 'changed'
-  changes = _.map (_.pairs changesObj), (p) ->
-    name: p[0]
-    rc: p[1]
-    numArticles: statsObj?[p[0]]?.articles
-  _.sortBy changes, (x) -> x.name
+Template.changes.helpers
+  title: -> if siteTitle? then siteTitle else 'Wikifarmchanges'
+  updated: -> Session.get 'updated'
+  changes: ->
+    Session.get 'changed'
+    changes = _.map (_.pairs changesObj), (p) ->
+      name: p[0]
+      rc: p[1]
+      numArticles: statsObj?[p[0]]?.articles
+    _.sortBy changes, (x) -> x.name
 
 
 
