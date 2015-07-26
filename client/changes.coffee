@@ -24,9 +24,7 @@
     siprop: 'statistics'
     ).done (data) ->
       stats = data.query.statistics
-
-      statsObj[host + wiki.articlePath] = stats
-
+      statsObj[wiki.name] = stats
       Session.set 'changed', Meteor.uuid()
 
   $.getJSON('http://' + host + wiki.apiPath + '/api.php?callback=?',
@@ -37,7 +35,6 @@
     ).done (data) ->
       rc = data.query.recentchanges
 
-      console.log 
       changesObj[wiki.name] = _.map rc, (change) ->
         # change.link = 'http://' + host + wiki.articlePath + '/=' + change.title
         change.link = 'http://' + host + '/' + wiki.articlePath + '/index.php?title=' + change.title
@@ -50,7 +47,7 @@
 
 @updateChanges = ->
   Session.set 'updated', moment().format("H:mm:ss")
-  console.log _.map wikis, (w) -> w.name
+  # console.log _.map wikis, (w) -> w.name
   for w in wikis
     fetchChanges w
 
