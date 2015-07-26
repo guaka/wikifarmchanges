@@ -3,7 +3,7 @@
 @changes = []
 @changesObj = {}
 @statsObj = {}
-
+@rc_urls = {}
 
 @fetchChanges = (wiki) ->
   # Simplest: entity is name and everything is standard
@@ -15,7 +15,6 @@
   wiki.articlePath = 'en' unless wiki.articlePath?
   host = if wiki.host? then wiki.host else wiki.name
   host += '/'
-
 
   # Not so DRY but hey, it works!
   $.getJSON('http://' + host + wiki.apiPath + '/api.php?callback=?',
@@ -38,11 +37,13 @@
     ).done (data) ->
       rc = data.query.recentchanges
 
-      changesObj[wiki.name] = _.map rc, (x) ->
-        x.link = 'http://' + host + wiki.articlePath + '/' + x.title
-        x.timestamp = moment(x.timestamp).fromNow()
-        x.comment = if x.logtype is 'delete' then '' else x.comment[..30]
-        x
+      console.log 
+      changesObj[wiki.name] = _.map rc, (change) ->
+        # change.link = 'http://' + host + wiki.articlePath + '/=' + change.title
+        change.link = 'http://' + host + '/' + wiki.articlePath + '/index.php?title=' + change.title
+        change.timestamp = moment(change.timestamp).fromNow()
+        change.comment = if change.logtype is 'delete' then '' else change.comment[..30]
+        change
 
       Session.set 'changed', Meteor.uuid()
 
@@ -55,6 +56,9 @@
 
 
 Meteor.startup ->
+  for w in wikis
+    rc_urls[w.name] = 'http://' + w.host + '/' + w.articlePath + '/index.php?title=Special:Recentchanges'
+    
   updateChanges()
   randomInterval()
 
@@ -74,11 +78,12 @@ Template.changes.helpers
   updated: -> Session.get 'updated'
   changes: ->
     Session.get 'changed'
-    changes = _.map (_.pairs changesObj), (p) ->
-      name: p[0]
-      rc: p[1]
-      numArticles: statsObj?[p[0]]?.articles
-    _.sortBy changes, (x) -> x.name
+    changes = _.map (_.pairs changesObj), (page) ->
+        rc_url: rc_urls[page[0]]
+        name: page[0]
+        rc: page[1]
+        numArticles: statsObj?[page[0]]?.articles
+    _.sortBy changes, (change) -> change.name
 
 
 

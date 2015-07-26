@@ -18,7 +18,7 @@
 
 <template name="wiki">
   <div class="wiki">
-    <h2><a href="http://{{name}}/Special:Recentchanges">{{name}}</a></h2>
+    <h2><a href="{{rc_url}}">{{name}}</a></h2>
     {{numArticles}}
     {{#each rc}}
     {{> change}}
